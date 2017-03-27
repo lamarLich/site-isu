@@ -1,0 +1,1 @@
+C:\OpenServer\modules\php\PHP-5.4\php.exe composer.phar create-project yiisoft/yii2-app-basic basic 2.0.10
