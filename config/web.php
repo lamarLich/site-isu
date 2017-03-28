@@ -47,6 +47,12 @@ $config = [
             'suffix' => '.html',
             'rules' => [
                 '<controller>/<action>' => '<controller>/<action>',
+
+                [
+                    'pattern' => '',
+                    'route' => 'site/index',
+                    'suffix' => ''
+                ],
             ]
         ],
 
