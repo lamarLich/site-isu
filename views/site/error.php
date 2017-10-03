@@ -5,23 +5,24 @@
 /* @var $message string */
 /* @var $exception Exception */
 
-use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = $name;
 ?>
-<div class="site-error">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
-    </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
+<div class='content c-cafed'>
+<div class='wrapper'>
+        <h2>Страница не найдена (#404)</h2>
+        <div class="alert alert-danger" role="alert">
+            Страницы, на которую вы попали, не существует.
+        </div>
+        <p>
+            <b>Вы можете попробовать следующее:</b>
+            <br><br> <a href = "<?= Url::home()?> ">- Перейти к главной странице сайта </a>
+            <br><br> - Проверить правильность введенного адреса
+            <br><br> - Вернуться туда откуда пришли ( нажать кнопку "Назад" в своем браузере )
+        </p>
 
 </div>
+</div>
+

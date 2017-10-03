@@ -4,12 +4,18 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+use yii\helpers\Url;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+
+if($this->title == "Главная"){
+    $cl = "header";
+}else{
+    $cl = "header header-min";
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -19,58 +25,55 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script type='text/javascript' src='https://api-maps.yandex.ru/2.1/?load=package.standard&amp;lang=ru-RU'></script>
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => 'Test Site ISU',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    ?>
+<div class='<?= $cl ?>'>
+    <div class='wrapper'>
+        <div class='topper'>
+            <div class='logotype'></div>
+            <ul class='menu'>
+                <li><a href='<?= Url::home() ?>'>Главная</a></li>
+                <li><a href='<?=  Url::to(['site/faculty'])?>'>Факультет</a></li>
+                <li><a href='<?=  Url::to(['site/study'])?>'>Учебный процесс</a></li>
+                <li><a href='<?=  Url::to(['site/abit'])?>'>Абитуриенту</a></li>
+                <li><a href='<?=  Url::to(['site/dopobr'])?>'>Доп образование</a></li>
+                <li><a href='<?=  Url::to(['site/contacts'])?>'>Контакты</a></li>
+                <?php//<li class='search'><img src='../images/search.png' alt='' /></li> ?>
+            </ul>
+        </div>
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= $content ?>
+        <div class='title'>
+            <h2>ФГБОУ ВО "Сибирский государственный автомобильно дорожный университет (СибАДИ)"</h2>
+            <h1>Информационные системы в управлении</h1>
+            <a href='<?= Url::to(["site/login"]) ?>'>Личный кабинет</a>
+         </div>
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+<?= $content ?>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+<div class='content c-footer'>
+    <div class='wrapper'>
+        <div class='footer'>
+            <div class='contacts'>
+                <span class='phone'>Любую справочную информацию Вы<br/>можете узнать по телефону</span>
+                <b>(3812) 60-55-50</b>
+                <span class='gr'>С 9:00 до 17:45 с понедельника по пятницу</span>
+            </div>
+            <div class='address'>
+					<span>
+						<b>Информационные системы в управлении</b>
+						Сибирский государственный<br/>автомобильно-дорожный университет
+					</span>
+                <a href='http://сибади.рф' target='_blank'>www.сибади.рф</a>
+            </div>
+        </div>
     </div>
-</footer>
+</div>
 
 <?php $this->endBody() ?>
 </body>

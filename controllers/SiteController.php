@@ -4,39 +4,17 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use app\models\teachers;
+use app\models\news;
+use app\models\users;
 use app\models\LoginForm;
-use app\models\ContactForm;
+
 
 class SiteController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -45,10 +23,6 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
-            ],
-            'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
@@ -60,66 +34,140 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $news = news::find()->orderBy('id desc')->limit(3)->all();
+
+
+        return $this->render('index',[
+            'news' => $news,
+        ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string
-     */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $model = new LoginForm();
+
+        if($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            $user = users::find()->where(['login' => $model->login])->one();
+            $session = Yii::$app->session;
+            $session->open();
+            $session->set('id', $user->id);
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if(Yii::$app->session->get('id'))
+        {
+            return $this->redirect(Url::to(['profile/index']));
+        }else{
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
-        return $this->render('login', [
-            'model' => $model,
+    }
+
+    public function actionFaculty()
+    {
+        return $this->render('faculty');
+    }
+
+    public function actionStudy()
+    {
+        return $this->render('study');
+    }
+
+    public function actionStudy_freshman()
+    {
+        return $this->render('study_freshman');
+    }
+
+    public function actionStudy_teachers()
+    {
+        $teachers = teachers::find()->orderBy(['fio' => SORT_ASC])->all();
+
+        return $this->render('study_teachers',[
+            'teachers' => $teachers,
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return string
-     */
+    public function actionStudy_active()
+    {
+        return $this->render('study_active');
+    }
+
+    public function actionStudy_events()
+    {
+        return $this->render('study_events');
+    }
+
+    public function actionStudy_profession()
+    {
+        return $this->render('study_profession');
+    }
+
+    public function actionStudy_projects()
+    {
+        return $this->render('study_projects');
+    }
+
+    public function actionStudy_resources()
+    {
+        return $this->render('study_resources');
+    }
+
+    public function actionStudy_science()
+    {
+        return $this->render('study_science');
+    }
+
+    public function actionDopobr()
+    {
+        return $this->render('dopobr');
+    }
+
+    public function actionContacts()
+    {
+        return $this->render('contacts');
+    }
+
+    public function actionAbit()
+    {
+        return $this->render('abit');
+    }
+
+    public function actionStudy_teacher()
+    {
+        $id = Yii::$app->request->get('id');
+        $teacher = (teachers::find()->where(['id'=> $id])->one()) ? teachers::find()->where(['id'=> $id])->one() : 'Error';
+
+        return $this->render('study_teacher',[
+            'teacher' => $teacher,
+        ]);
+    }
+
+    public function actionNews()
+    {
+        $id = Yii::$app->request->get('id');
+        $news = (news::find()->where(['id'=> $id])->one()) ? news::find()->where(['id'=> $id])->one() : 'Error';
+
+        return $this->render('news',[
+            'news' => $news,
+        ]);
+    }
+
+    public function actionNews_all()
+    {
+        $news = news::find()->orderBy('id desc')->all();
+
+        return $this->render('news_all',[
+            'news' => $news,
+        ]);
+    }
+
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        Yii::$app->session->remove('id');
+        Yii::$app->session->destroy();
+        Yii::$app->session->close();
 
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
+        return  $this->redirect(['site/login']);
     }
 }

@@ -4,6 +4,7 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
+    'language' => 'ru-RU',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -47,19 +48,28 @@ $config = [
             'suffix' => '.html',
             'rules' => [
                 '<controller>/<action>' => '<controller>/<action>',
-
                 [
                     'pattern' => '',
                     'route' => 'site/index',
                     'suffix' => ''
                 ],
+                [
+                    'pattern' => 'admin',
+                    'route' => 'admin/index',
+                    'suffix' => ''
+                ],
+                [
+                    'pattern' => 'profile',
+                    'route' => 'profile/index',
+                    'suffix' => ''
+                ]
             ]
         ],
 
     ],
     'params' => $params,
 ];
-
+/*
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
@@ -75,6 +85,6 @@ if (YII_ENV_DEV) {
         // uncomment the following to add your IP if you are not connecting from localhost.
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
-}
+}*/
 
 return $config;
